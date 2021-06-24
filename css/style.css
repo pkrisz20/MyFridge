@@ -1,7 +1,7 @@
 body {
   font-family: "Trebuchet MS", "Lucida Sans Unicode", "Lucida Grande",
     "Lucida Sans", Arial, sans-serif;
-  background-color: #000;
+  background-image: url("../images/texture.png");
   padding: 0;
   margin: 0;
 }
@@ -34,17 +34,12 @@ li a {
   font-size: 20px;
 }
 
-li a:hover {
-  background-color: #fff;
-  color: #000;
-}
-
 .dropdown-item:hover {
   background-color: #000;
   color: #fff;
 }
 
-/*-----BODY PRODUCT CARDS-----*/
+/*-----BODY PRODUCT CARD-----*/
 
 .row {
   margin-top: 90px;
@@ -64,7 +59,7 @@ li a:hover {
 
 .text1 {
   font-size: 13px;
-  color: #cbcbcb;
+  color: #0053A9;
 }
 
 .info {
@@ -82,7 +77,17 @@ li a:hover {
 }
 
 .button {
-  background: #dc3545;
+  background: #0034AB;
+}
+
+a:hover > div > span {
+  font-weight: bold;
+  letter-spacing: 5px;
+}
+
+a > div > span {
+  color: #fff;
+  letter-spacing: 2px;
 }
 
 .details-link {

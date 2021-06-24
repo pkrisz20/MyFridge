@@ -1,12 +1,13 @@
 <?php
 
   session_start();
+  $recipes_id = $_GET["id"];
   require_once 'dbconfig.php';
-    $select_recipes = "SELECT * from recipes";
+  $select_recipes = "SELECT * from recipes where recipes_id = :id";
 
-    $recipes_query = $pdo -> prepare($select_recipes);
-    $recipes_query -> execute();
-
+  $recipes_query = $pdo -> prepare($select_recipes);
+  $recipes_query -> bindValue(":id", $recipes_id);
+  $recipes_query -> execute();
 
     if($recipes_query -> rowCount() > 0){
         $rows = $recipes_query -> fetchAll();
@@ -18,6 +19,8 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/duotone.css" integrity="sha384-R3QzTxyukP03CMqKFe0ssp5wUvBPEyy9ZspCB+Y01fEjhMwcXixTyeot+S40+AjZ" crossorigin="anonymous"/>
+    <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/fontawesome.css" integrity="sha384-eHoocPgXsiuZh+Yy6+7DsKAerLXyJmu2Hadh4QYyt+8v86geixVYwFqUvMU8X90l" crossorigin="anonymous"/>
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-eOJMYsd53ii+scO/bJGFsiCZc+5NDVN2yr8+0RDqr0Ql0h+rP48ckxlpbzKgwra6" crossorigin="anonymous">
     <link rel="stylesheet" href="css/details.css">
@@ -48,9 +51,15 @@
             </li>
 
           <!--LOGIN-->
-            <li class="nav-item">
-              <a class="nav-link links" href="login.php"><i class="material-icons">account_circle</i> Login</a>
-            </li>
+          <li class="nav-item">
+            <a class="nav-link links" href="login.php"><i class="material-icons">account_circle</i>
+              <?php if($_SESSION == NULL){
+                  echo "Login";
+              }
+              else{
+                  echo $_SESSION["username"];
+              } ?> </a>
+          </li>
 
           <!--DROPDOWN MENU-->
             <li class="nav-item dropdown links">
@@ -60,11 +69,12 @@
               </a>
 
               <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                <li><a class="dropdown-item" href="#">Appetiser</a></li>
-                <li><a class="dropdown-item" href="#">Main Dishes</a></li>
-                <li><a class="dropdown-item" href="#">Soups</a></li>
-                <li><a class="dropdown-item" href="#">Salads</a></li>
-                <li><a class="dropdown-item" href="#">Desserts</a></li>
+                <li><a class="dropdown-item" href="index.php">All categories</a></li>
+                <li><a class="dropdown-item" href="index.php?category=Appetiser">Appetiser</a></li>
+                <li><a class="dropdown-item" href="index.php?category=Main Dishes">Main Dishes</a></li>
+                <li><a class="dropdown-item" href="index.php?category=Soups">Soups</a></li>
+                <li><a class="dropdown-item" href="index.php?category=Salads">Salads</a></li>
+                <li><a class="dropdown-item" href="index.php?category=Desserts">Desserts</a></li>
               </ul>
 
             </li>
@@ -76,6 +86,13 @@
             </li>
             <!--END OF SEARCH-->
 
+            <!--LOG OUT-->
+            <?php if(!($_SESSION == NULL)){ echo '
+              <li class="nav-item">
+                <a class="nav-link links" href="logout.php"><i class="material-icons">logout</i> Sign out</a>
+              </li>'; }
+            ?>
+
         </div>
 
       </div>
@@ -83,49 +100,97 @@
     <!--END OF NAVBAR-->
 
     <!--DETAILS ABOUT RECIPE-->
-  <div class="container all">
+    <div class="container all">
 
-    <div class="card">
-      <img src="images/tejszinescsirke.jpg" class="card-img-top" style="border: none;">
+        <div class="card">
+          <img src=<?php echo '"' . $rows[0]["recipes_image"] . '"'; ?> class="card-img-top">
 
-      <div class="card-body">
-        <h1>Tejszines csirke</h1>
-        <p class="card-text">Tejszines rizses csirke elkeszitese</p>
-        <p class="card-text">Leiras 1</p>
-        <p class="card-text">Hozzavalok</p>
-        <p class="card-text">Rating</p>
+          <div class="card-body">
+            <h1><?php echo $rows[0]["recipes_name"]; ?></h1>
+            <p class="card-text">Leiras: <?php echo $rows[0]["recipes_description"]; ?></p>
+            <p class="card-text">Hozzavalok:</p>
+            <p class="card-text">Rating:
+            <?php
+            $select_comments_and_ratings = "SELECT ROUND(AVG(comments_and_ratings.rating)) from comments_and_ratings JOIN recipes
+                  ON recipes.recipes_id = comments_and_ratings.recipe_id WHERE recipe_id = :id";
+
+                $comments_and_ratings_query = $pdo -> prepare($select_comments_and_ratings);
+                $comments_and_ratings_query -> bindValue(":id", $recipes_id);
+                $comments_and_ratings_query -> execute();
+
+                if($comments_and_ratings_query -> rowCount() > 0){
+                    $rows1 = $comments_and_ratings_query -> fetch();
+
+                  }
+                  for($j=0;$j<$rows1["ROUND(AVG(comments_and_ratings.rating))"];$j++){
+
+                    echo '
+                      <i class="fas fa-star"></i>';
+                  }
+            ?>
+            </p>
+          </div>
+        </div>
+
       </div>
-    </div>
-
-  </div>
-  <!--END OF DETAILS-->
+  <!--END OF DETAILS ABOUT RECIPE-->
 
 <div class="container">
+
+  <!--RATING-->
+
+<div class="rating mt-3">
+  <div class="rating">
+        <span class="rating__result"></span>
+        <i class="rating__star far fa-star"></i>
+        <i class="rating__star far fa-star"></i>
+        <i class="rating__star far fa-star"></i>
+        <i class="rating__star far fa-star"></i>
+        <i class="rating__star far fa-star"></i>
+     </div>
+</div>
+
+  <!--END OF RATING-->
 
   <!--COMMENT FORM-->
 
   <form class="form-group mt-4">
     <label for="comment" class="form-label">Comment:</label>
-    <textarea class="form-control" rows="4" placeholder="Write your comment here..." id="comment"></textarea>
+    <textarea class="form-control" rows="4" placeholder="Write your comment here..."></textarea>
     <button type="submit" name="submit" class="btn mt-3 btn-default">Share comment</button>
   </form>
 <!--END OF COMMENT FORM-->
 
 <!--COMMENT SECTION-->
-  <div class="row-comment" style="display: flex; justify-content: center; align-items: center;">
+<?php
+  $sql = "SELECT registered.username, comments_and_ratings.comment, comments_and_ratings.rating
+  FROM comments_and_ratings JOIN registered ON registered.id = comments_and_ratings.username_id WHERE recipe_id = :id";
 
-    <div style="height: 100px; width: 200px;" class="text-center col-lg-4 mt-5 bg-light mb-4 profile-name">
-        <i class="material-icons profile-icon">account_circle</i> <span id="username">felhasznalo</span>
-    </div>
+  $sql = $pdo -> prepare($sql);
+  $sql -> bindValue(":id", $recipes_id,PDO::PARAM_INT);
+  $sql -> execute();
+  if($sql -> rowCount() > 0){
+    $rows = $sql -> fetchAll();
+    for($i = 0; $i< count($rows); $i++){
+      echo '
+      <div class="row-comment" style="display: flex; justify-content: center; align-items: center;">
 
-    <div style="height: 100px; width: 800px;" class="comment-description col-lg-8 mt-5 bg-light mb-4">
-        <p class="comment">maga a hozzaszolas</p>
-    </div>
+          <div style="height: 100px; width: 200px;" class="text-center col-lg-4 mt-3 bg-light mb-4 profile-name">
+              <i class="material-icons profile-icon">account_circle</i> <span id="username">' . $rows[$i]["username"] . '</span>
+          </div>
 
-  </div>
+          <div style="height: 100px; width: 800px;" class="comment-description col-lg-8 mt-3 bg-light mb-4">
+              <p class="comment">' . $rows[$i]["comment"] . '</p>
+          </div>
+
+        </div>';
+    }
+  }
+?>
   <!--END OF COMMENT SECTION-->
 </div>
 
+  <script type="text/javascript" src="script.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js" integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9Ekf" crossorigin="anonymous"></script>
   </body>
 </html>

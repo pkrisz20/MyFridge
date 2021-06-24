@@ -28,6 +28,8 @@ else{
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/duotone.css" integrity="sha384-R3QzTxyukP03CMqKFe0ssp5wUvBPEyy9ZspCB+Y01fEjhMwcXixTyeot+S40+AjZ" crossorigin="anonymous"/>
+    <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/fontawesome.css" integrity="sha384-eHoocPgXsiuZh+Yy6+7DsKAerLXyJmu2Hadh4QYyt+8v86geixVYwFqUvMU8X90l" crossorigin="anonymous"/>
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-eOJMYsd53ii+scO/bJGFsiCZc+5NDVN2yr8+0RDqr0Ql0h+rP48ckxlpbzKgwra6" crossorigin="anonymous">
     <link rel="stylesheet" href="css/style.css">
@@ -111,7 +113,7 @@ else{
     <div class="container-fluid">
       <div class="row">
 
-        <!--PRODUCT CARD 1-->
+        <!--PRODUCT CARD-->
         <?php
 
           //select comments and ratings
@@ -128,15 +130,14 @@ else{
 
               }
             echo '
-            <div class="col-md-4">
+            <div class="col-md-3">
               <div class="card mt-3">
                 <div class="product-1 align-items-center p-2 text-center">
                   <img src="'. $rows[$i]["recipes_image"] . '" alt="recept" class="rounded mb-3" width="250" height="250">
                   <h5>'. $rows[$i]["recipes_name"] . '</h5>
 
                   <div class="mt-3 info">
-                    <span class="text1 d-block">'. $rows[$i]["recipes_description"] .'</span>
-                    <span class="text1">Lorem ipsum dolor sit amet, consectetur adipisicing elit</span>
+                    <span class="text1">' . $rows[$i]["recipes_description"] . '</span>
                   </div>
                   <div class="cost mt-3 text-dark">
                     <span>$' . $rows[$i]["recipes_price"] . '</span>
@@ -154,8 +155,9 @@ else{
                 </div>
 
                 <!--BUTTON FOR CARD-->
-                <a href="details.php" class="details-link"><div class="p-3 button text-center text-dark mt-3 cursor">
-                  <span class="text-uppercase">Details</span>
+                <a href="details.php?id='. $rows[$i]["recipes_id"] .'" class="details-link">
+                <div class="p-3 button text-center text-dark mt-3 cursor">
+                  <span class="details-text text-uppercase">Details</span>
                 </div></a>
               </div>
             </div>
@@ -167,6 +169,7 @@ else{
     </div>
     <!--END OF CONTAINER FOR PRODUCTS-->
 
+  <script src="script.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js" integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9Ekf" crossorigin="anonymous"></script>
   </body>
 </html>
