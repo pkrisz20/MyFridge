@@ -18,7 +18,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
         // Prepare a select statement
         $sql = "SELECT id FROM registered WHERE username = :username";
 
-        if($stmt = $pdo->prepare($sql)){
+        if($stmt = $pdo -> prepare($sql)){
             // Bind variables to the prepared statement as parameters
             $stmt->bindParam(":username", $param_username, PDO::PARAM_STR);
 
@@ -41,13 +41,6 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
         }
     }
 
-    //Validate email
-    /*if(empty(trim($_POST["email"]))){
-      $email_err = "Please enter your email adress.";
-    }  else{
-      $email = trim($_POST["email"]);
-    }*/
-
     if(empty(trim($_POST["email"]))){
         $username_err = "Please enter your email adress.";
     } else{
@@ -64,7 +57,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
             // Attempt to execute the prepared statement
             if($stmt->execute()){
                 if($stmt->rowCount() == 1){
-                    $username_err = "This email is already taken.";
+                    $email_err = "This email is already taken.";
                 } else{
                     $email = trim($_POST["email"]);
                 }
@@ -111,7 +104,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
     if(empty($username_err) && empty($password_err) && empty($email_err) && empty($name_err) && empty($surname_err) && empty($mobile_err)){
 
         // Prepare an insert statement
-        $sql = "INSERT INTO registered (username, password, email, name, surname, mobile) VALUES (:username, :password, :email, :name, :surname, :mobile)";
+        $sql = "INSERT INTO registered (username, password, email, name, surname, mobile, is_admin) VALUES (:username, :password, :email, :name, :surname, :mobile, :admin)";
 
         if($stmt = $pdo->prepare($sql)){
             // Bind variables to the prepared statement as parameters
@@ -121,10 +114,11 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
             $stmt->bindParam(":name", $param_name, PDO::PARAM_STR);
             $stmt->bindParam(":surname", $param_surname, PDO::PARAM_STR);
             $stmt->bindParam(":mobile", $param_mobile, PDO::PARAM_STR);
+            $stmt->bindParam(":admin", 0, PDO::PARAM_INT);
 
             // Set parameters
             $param_username = $username;
-            $param_password = password_hash($password, PASSWORD_DEFAULT); // Creates a password hash
+            $param_password = password_hash($password, PASSWORD_DEFAULT); // Create hashed password
             $param_email = $email;
             $param_name = $name;
             $param_surname = $surname;
@@ -135,7 +129,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
                 // Set on true if executes
                 $registered = true;
             } else{
-                echo "Oops! Something went wrong. Please try again later.";
+                echo "Oops! Something went wrong. Please try again.";
             }
 
             // Close statement

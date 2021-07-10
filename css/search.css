@@ -21,11 +21,6 @@ li a {
   text-align: center;
 }
 
-.nav-link:hover {
-  background-color: #fff;
-  color: #000;
-}
-
 .links {
   margin-left: 60px;
   border-radius: 10px;
@@ -39,16 +34,84 @@ li a {
   font-size: 20px;
 }
 
+li a:hover {
+  background-color: #fff;
+  color: #000;
+}
+
 .dropdown-item:hover {
   background-color: #000;
   color: #fff;
 }
 
-/*-----BODY PRODUCT CARD-----*/
+/*-----SEARCH FIELD-----*/
 
-.row {
-  margin-top: 90px;
+.search-recipe {
+  margin-top: 150px;
 }
+
+#input-error {
+  background-color: red;
+  color: #fff;
+  padding: 8px;
+  margin-bottom: 10px;
+  border-radius: 10px;
+  font-size: 16px;
+  font-weight: bold;
+}
+
+.hidden {
+  display: none;
+}
+
+/*-----INGREDIENTS TABLE-----*/
+
+.btn {
+  padding: 10px 40px;
+  letter-spacing: 4px;
+  background: #0034AB;
+  color: #fff;
+  letter-spacing: 2px;
+  font-weight: bold;
+}
+
+.btn:hover {
+  background: #D60808;
+  color: #fff;
+  transition: 0.3s;
+}
+
+#table-title {
+  letter-spacing: 12px;
+  font-size: 20px;
+  font-weight: bold;
+  border-bottom: 2px solid #fff;
+}
+
+.table {
+  text-align: center;
+  background-color: #92C8FF;
+}
+
+.delete-icon {
+  font-size: 24px;
+  vertical-align: middle;
+}
+
+.delete-icon a {
+  color: #000;
+}
+
+.delete-icon a:hover {
+  color: red;
+}
+
+.grocery-name {
+  font-size: 18px;
+  vertical-align: middle;
+  color: #000;
+}
+/*-----SELECTED RECIPES-----*/
 
 .card {
   border: none;
@@ -107,17 +170,4 @@ a > div > span {
   cursor: pointer;
   border-bottom-left-radius: 20px;
   border-bottom-right-radius: 20px;
-}
-
-/*------BUTTONS FOR PAGES----*/
-
-.page-buttons {
-  padding: 8px 20px;
-  background-color: #0034AB;
-  border: none;
-  transition: 0.3s;
-}
-
-.page-buttons:hover {
-  background-color: #D60808;
 }

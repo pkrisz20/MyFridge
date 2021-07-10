@@ -11,16 +11,14 @@
 }
 
 else{
-  $select_recipes = "SELECT * from recipes";
+  $select_recipes = "SELECT * from recipes"; //select everything
 }
 
     $recipes_query = $pdo -> prepare($select_recipes);
     $recipes_query -> execute();
 
-
     if($recipes_query -> rowCount() > 0){
         $rows = $recipes_query -> fetchAll();
-
       }
 ?>
 <!doctype html>
@@ -61,16 +59,17 @@ else{
 
           <!--LOGIN-->
             <li class="nav-item">
-              <a class="nav-link links" href="login.php"><i class="material-icons">account_circle</i>
                 <?php if($_SESSION == NULL){
-                    echo "Login";
+                    echo '<a class="nav-link links" href="login.php"><i class="material-icons">account_circle</i>';
+                    echo 'Login';
+                    echo '</a>';
                 }
                 else{
-                    echo $_SESSION["username"];
-                } ?> </a>
+                  echo '<a class="nav-link links" href="profile-page.php"><i class="material-icons">account_circle</i>';
+                  echo $_SESSION["username"];
+                  echo '</a>';
+                } ?>
             </li>
-
-
 
           <!--DROPDOWN MENU-->
             <li class="nav-item dropdown links">
@@ -129,9 +128,10 @@ else{
                 $rows1 = $comments_and_ratings_query -> fetch();
 
               }
+              //select card
             echo '
             <div class="col-md-3">
-              <div class="card mt-3">
+              <div class="card mt-4">
                 <div class="product-1 align-items-center p-2 text-center">
                   <img src="'. $rows[$i]["recipes_image"] . '" alt="recept" class="rounded mb-3" width="250" height="250">
                   <h5>'. $rows[$i]["recipes_name"] . '</h5>
@@ -140,11 +140,11 @@ else{
                     <span class="text1">' . $rows[$i]["recipes_description"] . '</span>
                   </div>
                   <div class="cost mt-3 text-dark">
-                    <span>$' . $rows[$i]["recipes_price"] . '</span>
+                    <span>€' . $rows[$i]["recipes_price"] . '</span>
                     <div class="star mt-3 align-items-center">
                     ';
 
-                    for($j=0;$j<$rows1["ROUND(AVG(comments_and_ratings.rating))"];$j++){
+                    for($j = 0; $j < $rows1["ROUND(AVG(comments_and_ratings.rating))"]; $j++){
 
                       echo '
                         <i class="fas fa-star"></i>';
@@ -168,6 +168,15 @@ else{
       </div>
     </div>
     <!--END OF CONTAINER FOR PRODUCTS-->
+
+<div class="container" style="display: flex; justify-content: center;">
+  <div class="row">
+    <div>
+      <a type="button" href="#" class="page-buttons btn btn-primary mb-3"> Previous page </a>
+      <a type="button" href="#" class="page-buttons btn btn-primary mb-3"> Next page </a>
+    </div>
+  </div>
+</div>
 
   <script src="script.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js" integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9Ekf" crossorigin="anonymous"></script>

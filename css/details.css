@@ -48,7 +48,7 @@ li a:hover {
 
 .card {
   margin-top: 150px;
-  height: 730px;
+  height: 850px;
   width: 700px;
 }
 
@@ -59,8 +59,17 @@ li a:hover {
 
 /*-----COMMENT FORM-----*/
 
+.error {
+  font-size: 20px;
+  background-color: red;
+  color: #fff;
+  padding: 15px;
+  border-radius: 10px;
+  margin-right: 700px;
+}
+
 .form-label {
-  color: #0034AB;
+  color: #000;
   font-size: 18px;
   font-weight: bold;
 }
@@ -93,6 +102,7 @@ li a:hover {
   border-top-right-radius: 20px;
   border-bottom-right-radius: 20px;
   padding: 10px;
+  background-color: #92C8FF;
 }
 
 .profile-name {
@@ -100,6 +110,7 @@ li a:hover {
   padding-top: 30px;
   border-top-left-radius: 20px;
   border-bottom-left-radius: 20px;
+  background-color: #00EF56;
 }
 
 #username {
@@ -114,36 +125,42 @@ li a:hover {
 
 /*-----RATING-----*/
 
-.rating {
-   position: relative;
-   width: 400px;
-   background: transparent;
-   display: flex;
-   justify-content: center;
-   align-items: center;
-   padding: 10px;
-   overflow: hidden;
-   border-radius: 20px;
-   font-size: 35px;
-   background: #0034AB;
+.fa-star:before {
+    content: "\f005";
 }
 
-.rating__result {
-   position: absolute;
-   top: 0;
-   left: 0;
-   transform: translateY(-10px) translateX(-5px);
-   z-index: -9;
-   color: #ebebeb8e;
+.rating-list li i.yellow {
+    color: #FFD700;
 }
 
-.rating__star {
-   font-size: 1.3em;
-   cursor: pointer;
-   color: #dabd18b2;
-   transition: filter linear .3s;
+.rating-list li i.gray {
+    color: #bbb;
 }
 
-.rating__star:hover {
-   filter: drop-shadow(1px 1px 4px gold);
+.stars-background {
+  display: flex;
+  justify-content: center;
+  margin-left: 300px;
+  margin-right: 300px;
+  border-radius: 25px;
+}
+
+.list-inline>li {
+    display: inline-block;
+    padding-right: 5px;
+    padding-left: 5px;
+    font-size: 30px;
+}
+
+.rating-list li {
+    padding-top: 10px;
+}
+.fa {
+    display: inline-block;
+    font: normal normal normal 14px/1 FontAwesome;
+    font-size: inherit;
+    text-rendering: auto;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    transform: translate(0, 0);
 }

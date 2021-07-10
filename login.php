@@ -1,14 +1,12 @@
 <?php
 
-// Initialize the session
 session_start();
 
-// Check if the user is already logged in, if yes then redirect him to welcome page
+// Check if the user is already logged in
 if(isset($_SESSION["loggedin"]) && $_SESSION["loggedin"] === true){
     header("location: index.php");
 }
 
-// Include config file
 require_once "dbconfig.php";
 
 // Define variables and initialize with empty values
@@ -35,7 +33,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
     // Validate credentials
     if(empty($username_err) && empty($password_err)){
         // Prepare a select statement
-        $sql = "SELECT id, username, password FROM registered WHERE username = :username";
+        $sql = "SELECT id, username, password, is_admin FROM registered WHERE username = :username";
 
         if($stmt = $pdo->prepare($sql)){
 
@@ -62,8 +60,14 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
                             $_SESSION["id"] = $id;
                             $_SESSION["username"] = $username;
 
-                            // Redirect user to welcome page
-                            header("location: index.php");
+                            if($row['is_admin'] == 1){
+                              header("location: admin/index-admin.php");
+                            }
+                            else {
+                              // Redirect user to index page
+                              header("location: index.php");
+                            }
+
                         } else{
                             // Password is not valid, display a generic error message
                             $login_err = "Invalid password.";
@@ -74,7 +78,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
                     $login_err = "This username doesn't exist.";
                 }
             } else{
-                echo "Oops! Something went wrong. Please try again later.";
+                echo "Oops! Something went wrong. Please try again.";
             }
 
             // Close statement
@@ -94,6 +98,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <script src="https://use.fontawesome.com/1d8204edd4.js"></script>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-eOJMYsd53ii+scO/bJGFsiCZc+5NDVN2yr8+0RDqr0Ql0h+rP48ckxlpbzKgwra6" crossorigin="anonymous">
     <link rel="stylesheet" href="css/login.css">
 
@@ -102,9 +107,73 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
 
   <body>
 
-    <div class="back-icon">
-      <a calss="col-6" href="index.php"><i class="fa fa-arrow-left"></i>Back to the Home Page</a>
-    </div>
+    <!--NAVBAR-->
+
+    <nav class="navbar navbar-expand-lg bg-dark navbar-dark fixed-top">
+
+      <div class="container-fluid">
+        <!--LOGO-->
+        <a class="navbar-brand" href="#"><img class="logo" src="images/logo.png"></a>
+
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarNavDropdown">
+
+          <!--HOME-->
+            <li class="nav-item">
+              <a class="nav-link links" href="index.php"><i class="material-icons">home</i> <span>Home</span></a>
+            </li>
+
+          <!--LOGIN-->
+          <li class="nav-item">
+            <a class="nav-link links" href="login.php"><i class="material-icons">account_circle</i>
+              <?php if($_SESSION == NULL){
+                  echo "Login";
+              }
+              else{
+                  echo $_SESSION["username"];
+              } ?> </a>
+          </li>
+
+          <!--DROPDOWN MENU-->
+            <li class="nav-item dropdown links">
+
+              <a class="nav-link dropdown-toggle links-dropdown" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                <i class="material-icons">menu_book</i> Recipes
+              </a>
+
+              <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                <li><a class="dropdown-item" href="index.php">All categories</a></li>
+                <li><a class="dropdown-item" href="index.php?category=Appetiser">Appetiser</a></li>
+                <li><a class="dropdown-item" href="index.php?category=Main Dishes">Main Dishes</a></li>
+                <li><a class="dropdown-item" href="index.php?category=Soups">Soups</a></li>
+                <li><a class="dropdown-item" href="index.php?category=Salads">Salads</a></li>
+                <li><a class="dropdown-item" href="index.php?category=Desserts">Desserts</a></li>
+              </ul>
+
+            </li>
+            <!--END OF DROPDOWN MENU-->
+
+            <!--SEARCH-->
+            <li class="nav-item">
+              <a class="nav-link links" href="search.php"><i class="material-icons">search</i> Search for recipes</a>
+            </li>
+            <!--END OF SEARCH-->
+
+            <!--LOG OUT-->
+            <?php if(!($_SESSION == NULL)){ echo '
+              <li class="nav-item">
+                <a class="nav-link links" href="logout.php"><i class="material-icons">logout</i> Sign out</a>
+              </li>'; }
+            ?>
+
+        </div>
+
+      </div>
+    </nav>
+    <!--END OF NAVBAR-->
 
     <div class="d-flex justify-content-center align-items-center login-container">
 
