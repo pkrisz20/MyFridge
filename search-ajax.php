@@ -1,5 +1,5 @@
 <?php
-
+    session_start();
     require_once 'dbconfig.php';
 
     if(!empty($_POST["ingredient"])){
@@ -14,10 +14,15 @@
     if($query_ingredient -> rowCount() > 0){
         $rows1 = $query_ingredient -> fetch();
 
+        if(!isset($_SESSION["groceries"])){
+          $_SESSION["groceries"] = array();
+        }
+        array_push($_SESSION["groceries"], $rows1["groceries_name"]);
+
         $response["status"] = true;
         $response["message"] = '  <tr>
                 <td class="grocery-image"><img src="data:image/jpg; base64, '.base64_encode($rows1["groceries_image"]).'" width="120" height="120"></td>
-                <td class="grocery-name js-grocery_name">'.$rows1["groceries_name"].'</td>
+                <td class="grocery-name">'.$rows1["groceries_name"].'</td>
                 <td class="delete-icon"><a class="js-delete" href="#"><i class="fas fa-trash-alt"></i></a></td>
               </tr>';
       }

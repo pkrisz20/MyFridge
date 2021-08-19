@@ -1,5 +1,6 @@
 <?php
   session_start();
+  //unset($_SESSION["groceries"]);
   require_once 'dbconfig.php';
 
   $select_recipes = "SELECT * from recipes";
@@ -134,71 +135,121 @@
     </table>
 
     <div>
-      <button type="button" name="recommend" class="btn js-recommend">RECOMMEND ME RECIPES</button>
+      <form action="search.php" method="POST">
+        <button type="submit" name="recommend" class="btn js-recommend">RECOMMEND ME RECIPES</button>
+      </form>
     </div>
-  </div>
 </div>
   <!--END OF INGREDIENTS TABLE-->
 
-
-      <!--SELECTED RECIPES
+  <!--SELECT RECIPES-->
   <div class="container-fluid">
     <div class="row">
       <?php
-      /*
 
-        //select comments and ratings
-        for($i=0;$i< count($rows);$i++){
-          $select_comments_and_ratings = "SELECT ROUND(AVG(comments_and_ratings.rating)) from comments_and_ratings JOIN recipes
-            ON recipes.recipes_id = comments_and_ratings.recipe_id WHERE recipe_id = :id";
+      if(isset($_POST["recommend"])){
+      //comments and ratings
+      for($i = 0; $i < count($rows); $i++){
+        $select_comments_and_ratings = "SELECT ROUND(AVG(comments_and_ratings.rating)) FROM comments_and_ratings JOIN recipes
+          ON recipes.recipes_id = comments_and_ratings.recipe_id WHERE recipe_id = :id";
 
-          $comments_and_ratings_query = $pdo -> prepare($select_comments_and_ratings);
-          $comments_and_ratings_query -> bindValue(":id", $rows[$i]["recipes_id"]);
-          $comments_and_ratings_query -> execute();
+        $comments_and_ratings_query = $pdo -> prepare($select_comments_and_ratings);
+        $comments_and_ratings_query -> bindValue(":id", $rows[$i]["recipes_id"]);
+        $comments_and_ratings_query -> execute();
 
-          if($comments_and_ratings_query -> rowCount() > 0){
-              $rows1 = $comments_and_ratings_query -> fetch();
+        if($comments_and_ratings_query -> rowCount() > 0){
+            $rows1 = $comments_and_ratings_query -> fetch();
 
-            }
-          echo '
-          <div class="col-md-3">
-            <div class="card mt-4">
-              <div class="product-1 align-items-center p-2 text-center">
-                <img src="'. $rows[$i]["recipes_image"] . '" alt="recept" class="rounded mb-3" width="250" height="250">
-                <h5>'. $rows[$i]["recipes_name"] . '</h5>
+          }
 
-                <div class="mt-3 info">
-                  <span class="text1">' . $rows[$i]["recipes_description"] . '</span>
-                </div>
-                <div class="cost mt-3 text-dark">
-                  <span>€' . $rows[$i]["recipes_price"] . '</span>
-                  <div class="star mt-3 align-items-center">
-                  ';
+      if(isset($_SESSION["groceries"])){
 
-                  for($j = 0; $j < $rows1["ROUND(AVG(comments_and_ratings.rating))"]; $j++){
+        $select_recipes = "(SELECT groceries_id FROM groceries WHERE ";
 
-                    echo '
-                      <i class="fas fa-star"></i>';
-                  }
-                  echo '
+        $int = 0;
+        foreach($_SESSION["groceries"] as $key) {
+          if($int !== 0){
+            $select_recipes = $select_recipes . " OR ";
+          }
+          $select_recipes = $select_recipes . " groceries_name = :groceries$int";
+          $int = $int + 1;
+        }
+        $select_recipes = $select_recipes . ")";
+
+        $recipes_query = $pdo -> prepare($select_recipes);
+
+        for($k = 0; $k < $int; $k++){
+          $recipes_query -> bindValue(":groceries$k", $_SESSION["groceries"][$k]);
+        }
+        $recipes_query -> execute();
+
+        //fetch object
+        //var_dump($select_recipes);
+        if($recipes_query -> rowCount() > 0){
+          $r = $recipes_query -> fetchAll();
+
+
+          for($zs = 0; $zs < count($r); $zs++){
+
+            $query_first = "SELECT recipes_id, recipes_name, recipes_image, recipes_price, recipes_description FROM recipes
+            INNER JOIN ing ON recipes.recipes_id = ing.recipe_id WHERE ing.groceries_id = :id";
+
+            var_dump($r);
+            $first_execute = $pdo -> prepare($query_first);
+            $first_execute -> bindValue(":id", $r[$zs]["groceries_id"]);
+
+
+            $first_execute -> execute();
+            $rows2 = $first_execute -> fetchAll();
+
+            while(true){
+              echo '
+              <div class="col-md-3">
+                <div class="card mt-4">
+                  <div class="product-1 align-items-center p-2 text-center">
+                    <img src="'. $rows2[$i]["recipes_image"] . '" alt="recept" class="rounded mb-3" width="250" height="250">
+                    <h5>'. $rows2[$i]["recipes_name"] . '</h5>
+
+                    <div class="mt-3 info">
+                      <span class="text1">' . $rows2[$i]["recipes_description"] . '</span>
+                    </div>
+                    <div class="cost mt-3 text-dark">
+                      <span>€' . $rows2[$i]["recipes_price"] . '</span>
+                      <div class="star mt-3 align-items-center">
+                      ';
+
+                      for($j = 0; $j < $rows1["ROUND(AVG(comments_and_ratings.rating))"]; $j++){
+
+                        echo '
+                          <i class="fas fa-star"></i>';
+                      }
+                      echo '
+                      </div>
+                    </div>
                   </div>
+
+                  <!--BUTTON FOR CARD-->
+                  <a href="details.php?id='. $rows2[$i]["recipes_id"] .'" class="details-link">
+                  <div class="p-3 button text-center text-dark mt-3 cursor">
+                    <span class="details-text text-uppercase">Details</span>
+                  </div></a>
                 </div>
               </div>
+              ';
+              break;
+            }
+          }
 
-              <!--BUTTON FOR CARD-->
-              <a href="details.php?id='. $rows[$i]["recipes_id"] .'" class="details-link">
-              <div class="p-3 button text-center text-dark mt-3 cursor">
-                <span class="details-text text-uppercase">Details</span>
-              </div></a>
-            </div>
-          </div>
-          ';
-        }*/
+          }
+        }
+      }
+      unset($_SESSION["groceries"]);
+    }
        ?>
 
     </div>
   </div>
-  END OF SELECT RECIPES-->
+  <!--END OF SELECT RECIPES-->
 
 
     <script type="text/javascript" src="jquery.js"></script>
