@@ -1,9 +1,10 @@
 body {
   font-family: "Trebuchet MS", "Lucida Sans Unicode", "Lucida Grande",
     "Lucida Sans", Arial, sans-serif;
-    background-image: url("../images/texture.png");
+  background-image: url("../images/texture.png");
   padding: 0;
   margin: 0;
+  overflow-x: hidden;
 }
 /*-----NAVBAR-----*/
 
@@ -88,29 +89,76 @@ li a:hover {
 }
 
 .btn:hover {
-  background-color: #0034AB;
+  background-color: #0034ab;
   color: #fff;
   transition: 0.5s;
   font-weight: bold;
 }
 
-.comment {
-  font-size: 18px;
+.row-comment {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+}
+
+.profile-name {
+  border-right: 6px solid #000;
+  border-top-left-radius: 20px;
+  border-bottom-left-radius: 20px;
+  background-color: #00ef56;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .comment-description {
   border-top-right-radius: 20px;
   border-bottom-right-radius: 20px;
   padding: 10px;
-  background-color: #92C8FF;
+  background-color: #92c8ff;
+  width: 100%;
+  height: auto;
+  display: flex;
+  flex-direction: row;
+  position: relative;
 }
 
-.profile-name {
-  border-right: 6px solid #000;
-  padding-top: 30px;
-  border-top-left-radius: 20px;
-  border-bottom-left-radius: 20px;
-  background-color: #00EF56;
+.comment {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  font-size: 18px;
+}
+
+.delete-comment {
+  position: absolute;
+  top: 35px;
+  right: 70px;
+  font-size: 24px;
+  transition: 0.5s;
+  color: #21618c;
+}
+
+.delete-comment:hover {
+  transform: scale(1.4, 1.4);
+  cursor: pointer;
+  color: #e74c3c;
+}
+
+.edit-comment {
+  position: absolute;
+  top: 35px;
+  right: 20px;
+  font-size: 24px;
+  transition: 0.5s;
+  color: #21618c;
+}
+
+.edit-comment:hover {
+  transform: scale(1.4, 1.4);
+  cursor: pointer;
+  color: #e74c3c;
 }
 
 #username {
@@ -126,15 +174,15 @@ li a:hover {
 /*-----RATING-----*/
 
 .fa-star:before {
-    content: "\f005";
+  content: "\f005";
 }
 
 .rating-list li i.yellow {
-    color: #FFD700;
+  color: #ffd700;
 }
 
 .rating-list li i.gray {
-    color: #bbb;
+  color: #bbb;
 }
 
 .stars-background {
@@ -145,22 +193,22 @@ li a:hover {
   border-radius: 25px;
 }
 
-.list-inline>li {
-    display: inline-block;
-    padding-right: 5px;
-    padding-left: 5px;
-    font-size: 30px;
+.list-inline > li {
+  display: inline-block;
+  padding-right: 5px;
+  padding-left: 5px;
+  font-size: 30px;
 }
 
 .rating-list li {
-    padding-top: 10px;
+  padding-top: 10px;
 }
 .fa {
-    display: inline-block;
-    font: normal normal normal 14px/1 FontAwesome;
-    font-size: inherit;
-    text-rendering: auto;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-    transform: translate(0, 0);
+  display: inline-block;
+  font: normal normal normal 14px/1 FontAwesome;
+  font-size: inherit;
+  text-rendering: auto;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  transform: translate(0, 0);
 }

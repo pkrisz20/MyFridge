@@ -48,7 +48,7 @@
 
           <!--LOGIN-->
           <li class="nav-item">
-              <?php if($_SESSION == NULL){
+              <?php if($_SESSION["username"] == NULL){
                   echo '<a class="nav-link links" href="login.php"><i class="material-icons">account_circle</i>';
                   echo 'Login';
                   echo '</a>';
@@ -159,7 +159,6 @@
 
         if($comments_and_ratings_query -> rowCount() > 0){
             $rows1 = $comments_and_ratings_query -> fetch();
-
           }
 
       if(isset($_SESSION["groceries"])){
@@ -194,7 +193,7 @@
             $query_first = "SELECT recipes_id, recipes_name, recipes_image, recipes_price, recipes_description FROM recipes
             INNER JOIN ing ON recipes.recipes_id = ing.recipe_id WHERE ing.groceries_id = :id";
 
-            var_dump($r);
+            // var_dump($r);
             $first_execute = $pdo -> prepare($query_first);
             $first_execute -> bindValue(":id", $r[$zs]["groceries_id"]);
 
@@ -202,6 +201,9 @@
             $first_execute -> execute();
             $rows2 = $first_execute -> fetchAll();
 
+            if($i<1){
+
+            
             while(true){
               echo '
               <div class="col-md-3">
@@ -239,6 +241,7 @@
               break;
             }
           }
+        }
 
           }
         }

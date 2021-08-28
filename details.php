@@ -202,6 +202,8 @@
 
           <div style="height: 100px; width: 800px;" class="comment-description col-lg-8 mt-3 mb-4">
               <p class="comment">' . $rows[$i]["comment"] . '</p>
+              <a class="delete-comment"><i class="fas fa-trash-alt"></i></a>
+              <a class="edit-comment"><i class="fas fa-edit"></i></a>
           </div>
         </div>';
     }

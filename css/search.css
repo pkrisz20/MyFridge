@@ -12,18 +12,20 @@ body {
   width: auto;
 }
 
-li a {
-  color: #fff;
-  font-size: 20px;
-}
-
-.nav-link {
+.container-fluid {
   text-align: center;
 }
 
-.links {
+li a {
+  color: #fff;
+  font-size: 20px;
+  margin: 0 auto;
+}
+
+.nav-link {
   margin-left: 60px;
   border-radius: 10px;
+  text-align: center;
 }
 
 .links-dropdown {
@@ -69,14 +71,14 @@ li a:hover {
 .btn {
   padding: 10px 40px;
   letter-spacing: 4px;
-  background: #0034AB;
+  background: #0034ab;
   color: #fff;
   letter-spacing: 2px;
   font-weight: bold;
 }
 
 .btn:hover {
-  background: #D60808;
+  background: #d60808;
   color: #fff;
   transition: 0.3s;
 }
@@ -90,7 +92,7 @@ li a:hover {
 
 .table {
   text-align: center;
-  background-color: #92C8FF;
+  background-color: #92c8ff;
 }
 
 .delete-icon {
@@ -127,7 +129,7 @@ li a:hover {
 
 .text1 {
   font-size: 13px;
-  color: #0053A9;
+  color: #0053a9;
 }
 
 .info {
@@ -145,7 +147,7 @@ li a:hover {
 }
 
 .button {
-  background: #0034AB;
+  background: #0034ab;
 }
 
 a:hover > div > span {
@@ -163,7 +165,7 @@ a > div > span {
 }
 
 .button:hover {
-  background: #D60808;
+  background: #d60808;
 }
 
 .cursor {

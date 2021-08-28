@@ -151,6 +151,7 @@ else{
                     }
                     echo '
                     </div>
+                    <a class="delete-card"><i class="fas fa-trash-alt"></i></a>
                   </div>
                 </div>
 

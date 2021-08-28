@@ -64,7 +64,7 @@ li a {
 
 .text1 {
   font-size: 13px;
-  color: #0053A9;
+  color: #0053a9;
 }
 
 .info {
@@ -82,7 +82,7 @@ li a {
 }
 
 .button {
-  background: #0034AB;
+  background: #0034ab;
 }
 
 a:hover > div > span {
@@ -100,7 +100,7 @@ a > div > span {
 }
 
 .button:hover {
-  background: #D60808;
+  background: #d60808;
 }
 
 .cursor {
@@ -113,11 +113,22 @@ a > div > span {
 
 .page-buttons {
   padding: 8px 20px;
-  background-color: #0034AB;
+  background-color: #0034ab;
   border: none;
   transition: 0.3s;
 }
 
 .page-buttons:hover {
-  background-color: #D60808;
+  background-color: #d60808;
+}
+
+.delete-card {
+  color: #0034ab;
+  transition: 0.5s;
+  font-size: 20px;
+}
+
+.delete-card:hover {
+  color: #d60808;
+  cursor: pointer;
 }
