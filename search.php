@@ -1,15 +1,6 @@
 <?php
   session_start();
-  //unset($_SESSION["groceries"]);
   require_once 'dbconfig.php';
-
-  $select_recipes = "SELECT * from recipes";
-  $recipes_query = $pdo -> prepare($select_recipes);
-  $recipes_query -> execute();
-
-  if($recipes_query -> rowCount() > 0){
-      $rows = $recipes_query -> fetchAll();
-    }
 ?>
 <!doctype html>
 <html lang="en">
@@ -149,105 +140,87 @@
 
       if(isset($_POST["recommend"])){
       //comments and ratings
-      for($i = 0; $i < count($rows); $i++){
-        $select_comments_and_ratings = "SELECT ROUND(AVG(comments_and_ratings.rating)) FROM comments_and_ratings JOIN recipes
-          ON recipes.recipes_id = comments_and_ratings.recipe_id WHERE recipe_id = :id";
+        $groceries = $_SESSION["groceries"];
+        
+        if(isset($_SESSION["groceries"])){
 
-        $comments_and_ratings_query = $pdo -> prepare($select_comments_and_ratings);
-        $comments_and_ratings_query -> bindValue(":id", $rows[$i]["recipes_id"]);
-        $comments_and_ratings_query -> execute();
+          $select_recipes = "(SELECT groceries_id FROM groceries WHERE ";
 
-        if($comments_and_ratings_query -> rowCount() > 0){
-            $rows1 = $comments_and_ratings_query -> fetch();
+          $int = 0;
+          foreach($_SESSION["groceries"] as $key) {
+            if($int !== 0){
+              $select_recipes = $select_recipes . " OR ";
+            }
+            $select_recipes = $select_recipes . " groceries_name = :groceries$int";
+            $int = $int + 1;
           }
+          $select_recipes = $select_recipes . ")";
 
-      if(isset($_SESSION["groceries"])){
+          $recipes_query = $pdo -> prepare($select_recipes);
 
-        $select_recipes = "(SELECT groceries_id FROM groceries WHERE ";
-
-        $int = 0;
-        foreach($_SESSION["groceries"] as $key) {
-          if($int !== 0){
-            $select_recipes = $select_recipes . " OR ";
+          for($k = 0; $k < $int; $k++){
+            $recipes_query -> bindValue(":groceries$k", $_SESSION["groceries"][$k]);
           }
-          $select_recipes = $select_recipes . " groceries_name = :groceries$int";
-          $int = $int + 1;
-        }
-        $select_recipes = $select_recipes . ")";
-
-        $recipes_query = $pdo -> prepare($select_recipes);
-
-        for($k = 0; $k < $int; $k++){
-          $recipes_query -> bindValue(":groceries$k", $_SESSION["groceries"][$k]);
-        }
-        $recipes_query -> execute();
-
-        //fetch object
-        //var_dump($select_recipes);
-        if($recipes_query -> rowCount() > 0){
-          $r = $recipes_query -> fetchAll();
+          $recipes_query -> execute();
 
 
-          for($zs = 0; $zs < count($r); $zs++){
-
-            $query_first = "SELECT recipes_id, recipes_name, recipes_image, recipes_price, recipes_description FROM recipes
-            INNER JOIN ing ON recipes.recipes_id = ing.recipe_id WHERE ing.groceries_id = :id";
-
-            // var_dump($r);
-            $first_execute = $pdo -> prepare($query_first);
-            $first_execute -> bindValue(":id", $r[$zs]["groceries_id"]);
-
-
-            $first_execute -> execute();
-            $rows2 = $first_execute -> fetchAll();
-
-            if($i<1){
-
+          $select_foods_query = "SELECT DISTINCT recipes_id, recipes_name, recipes_image, recipes_price, recipes_description FROM recipes
+            INNER JOIN ing ON recipes.recipes_id = ing.recipe_id 
+            INNER JOIN groceries ON groceries.groceries_id = ing.groceries_id WHERE ";
             
-            while(true){
+            for($i=0; $i< count($groceries); $i++)
+            {
+              $select_foods_query .= "groceries.groceries_name='" . $groceries[$i] . "' ";
+              if($i < count($groceries)-1){
+                $select_foods_query .= "OR ";
+              }
+            }
+            $select_foods = $pdo -> prepare($select_foods_query);
+            $select_foods -> execute();
+            $foods = $select_foods -> fetchAll();
+            for($i=0; $i< count($foods); $i++){
+              $select_comments_and_ratings = "SELECT ROUND(AVG(comments_and_ratings.rating)) FROM comments_and_ratings JOIN recipes
+                ON recipes.recipes_id = comments_and_ratings.recipe_id WHERE recipe_id = :id";
+              $comments_and_ratings_query = $pdo -> prepare($select_comments_and_ratings);
+              $comments_and_ratings_query -> bindValue(":id", $foods[$i]["recipes_id"]);
+              $comments_and_ratings_query -> execute();
+              $comments_and_ratings = $comments_and_ratings_query -> fetch();
               echo '
-              <div class="col-md-3">
-                <div class="card mt-4">
-                  <div class="product-1 align-items-center p-2 text-center">
-                    <img src="'. $rows2[$i]["recipes_image"] . '" alt="recept" class="rounded mb-3" width="250" height="250">
-                    <h5>'. $rows2[$i]["recipes_name"] . '</h5>
+                <div class="col-md-3">
+                  <div class="card mt-4">
+                    <div class="product-1 align-items-center p-2 text-center">
+                      <img src="'. $foods[$i]["recipes_image"] . '" alt="recept" class="rounded mb-3" width="250" height="250">
+                      <h5>'. $foods[$i]["recipes_name"] . '</h5>
 
-                    <div class="mt-3 info">
-                      <span class="text1">' . $rows2[$i]["recipes_description"] . '</span>
-                    </div>
-                    <div class="cost mt-3 text-dark">
-                      <span>€' . $rows2[$i]["recipes_price"] . '</span>
-                      <div class="star mt-3 align-items-center">
-                      ';
+                      <div class="mt-3 info">
+                        <span class="text1">' . $foods[$i]["recipes_description"] . '</span>
+                      </div>
+                      <div class="cost mt-3 text-dark">
+                        <span>€' . $foods[$i]["recipes_price"] . '</span>
+                        <div class="star mt-3 align-items-center">
+                        ';
+                        for($j = 0; $j < $comments_and_ratings["ROUND(AVG(comments_and_ratings.rating))"]; $j++){
 
-                      for($j = 0; $j < $rows1["ROUND(AVG(comments_and_ratings.rating))"]; $j++){
-
+                          echo '<i class="fas fa-star"></i>';
+                        }
                         echo '
-                          <i class="fas fa-star"></i>';
-                      }
-                      echo '
+                        </div>
                       </div>
                     </div>
-                  </div>
 
-                  <!--BUTTON FOR CARD-->
-                  <a href="details.php?id='. $rows2[$i]["recipes_id"] .'" class="details-link">
-                  <div class="p-3 button text-center text-dark mt-3 cursor">
-                    <span class="details-text text-uppercase">Details</span>
-                  </div></a>
+                    <!--BUTTON FOR CARD-->
+                    <a href="details.php?id='. $foods[$i]["recipes_id"] .'" class="details-link">
+                    <div class="p-3 button text-center text-dark mt-3 cursor">
+                      <span class="details-text text-uppercase">Details</span>
+                    </div></a>
+                  </div>
                 </div>
-              </div>
-              ';
-              break;
+                ';
             }
           }
-        }
-
-          }
-        }
+        
+        unset($_SESSION["groceries"]);
       }
-      unset($_SESSION["groceries"]);
-    }
        ?>
 
     </div>

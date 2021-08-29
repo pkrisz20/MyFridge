@@ -12,6 +12,12 @@
     if($recipes_query -> rowCount() > 0){
         $rows = $recipes_query -> fetchAll();
       }
+
+  $registered_query = "SELECT * from registered WHERE id = :id";
+  $registered = $pdo -> prepare($registered_query);
+  $registered -> bindValue(":id", $_SESSION["id"]);
+  $registered -> execute();
+  $user = $registered -> fetch();
 ?>
 <!doctype html>
 <html lang="en">
@@ -128,6 +134,7 @@
                     echo '
                       <i class="fas fa-star"></i>';
                   }
+
             ?>
             </p>
           </div>
@@ -141,13 +148,16 @@
   <!--RATING-->
 
   <div id="rating-div" class="stars-background bg-dark mt-3">
-    <ul class="list-inline rating-list">
-      <li><i class="fa fa-star gray"></i></li>
-      <li><i class="fa fa-star gray"></i></li>
-      <li><i class="fa fa-star gray"></i></li>
-      <li><i class="fa fa-star gray"></i></li>
-      <li><i class="fa fa-star gray"></i></li>
-    </ul>
+    <form method="POST">
+      <ul class="list-inline rating-list">
+        <li><i class="fa fa-star gray"></i></li>
+        <li><i class="fa fa-star gray"></i></li>
+        <li><i class="fa fa-star gray"></i></li>
+        <li><i class="fa fa-star gray"></i></li>
+        <li><i class="fa fa-star gray"></i></li>
+      </ul>
+    </form>
+    
   </div>
   <!--END OF RATING-->
 
@@ -184,7 +194,7 @@
 <!--COMMENT SECTION-->
 <?php
   //select comments
-  $sql = "SELECT registered.username, comments_and_ratings.comment, comments_and_ratings.rating
+  $sql = "SELECT comments_and_ratings.id, registered.username, comments_and_ratings.comment, comments_and_ratings.rating
   FROM comments_and_ratings JOIN registered ON registered.id = comments_and_ratings.username_id WHERE recipe_id = :id";
 
   $sql = $pdo -> prepare($sql);
@@ -201,10 +211,13 @@
           </div>
 
           <div style="height: 100px; width: 800px;" class="comment-description col-lg-8 mt-3 mb-4">
-              <p class="comment">' . $rows[$i]["comment"] . '</p>
-              <a class="delete-comment"><i class="fas fa-trash-alt"></i></a>
-              <a class="edit-comment"><i class="fas fa-edit"></i></a>
-          </div>
+          <form method="POST" action="delete.php?id='. $_GET["id"].'"> 
+              <p class="comment">' . $rows[$i]["comment"] . '</p>';
+
+              if(isset($_SESSION["admin"]) || $user["username"] == $rows[$i]["username"]){
+                echo '<button name="'. $rows[$i]["id"] .'" class="delete-comment"><i class="fas fa-trash-alt"></i></button></form>';
+              }
+          echo '</div>
         </div>';
     }
   }

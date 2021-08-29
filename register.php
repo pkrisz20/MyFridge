@@ -104,7 +104,8 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
     if(empty($username_err) && empty($password_err) && empty($email_err) && empty($name_err) && empty($surname_err) && empty($mobile_err)){
 
         // Prepare an insert statement
-        $sql = "INSERT INTO registered (username, password, email, name, surname, mobile, is_admin) VALUES (:username, :password, :email, :name, :surname, :mobile, :admin)";
+        $sql = "INSERT INTO registered (username, password, email, name, surname, mobile, is_admin) 
+        VALUES (:username, :password, :email, :name, :surname, :mobile, :admin)";
 
         if($stmt = $pdo->prepare($sql)){
             // Bind variables to the prepared statement as parameters
@@ -114,7 +115,8 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
             $stmt->bindParam(":name", $param_name, PDO::PARAM_STR);
             $stmt->bindParam(":surname", $param_surname, PDO::PARAM_STR);
             $stmt->bindParam(":mobile", $param_mobile, PDO::PARAM_STR);
-            $stmt->bindParam(":admin", 0, PDO::PARAM_INT);
+            $var = 0;
+            $stmt->bindParam(":admin", $var, PDO::PARAM_INT);
 
             // Set parameters
             $param_username = $username;

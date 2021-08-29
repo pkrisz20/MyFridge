@@ -2,7 +2,6 @@
 
   session_start();
   require_once 'dbconfig.php';
-
   //select cards by category
   if($_GET != NULL){
   if($_GET["category"]){
@@ -150,9 +149,11 @@ else{
                         <i class="fas fa-star"></i>';
                     }
                     echo '
-                    </div>
-                    <a class="delete-card"><i class="fas fa-trash-alt"></i></a>
-                  </div>
+                    </div>';
+                    if(isset($_SESSION["admin"])){
+                      echo '<a class="delete-card"><i class="fas fa-trash-alt"></i></a>';
+                    }
+                  echo '</div>
                 </div>
 
                 <!--BUTTON FOR CARD-->
@@ -165,7 +166,6 @@ else{
             ';
           }
          ?>
-
       </div>
     </div>
     <!--END OF CONTAINER FOR PRODUCTS-->
